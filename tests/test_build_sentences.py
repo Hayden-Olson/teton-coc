@@ -4,18 +4,18 @@ from build_sentences import (get_seven_letter_word, parse_json_from_file, choose
                               get_pronoun, get_article, get_word, fix_agreement, build_sentence, structures)
 
 def test_get_seven_letter_word(mocker):
-    mock_input = mocker.patch("builtin.input",return_value = "imagine")
+    mock_input = mocker.patch("builtins.input",return_value = "imagine")
     assert get_seven_letter_word() == "IMAGINE"
-    mock_input = mocker.patch("builtin.input",return_value = "character")
+    mock_input = mocker.patch("builtins.input",return_value = "character")
     assert get_seven_letter_word() == "CHARACTER"
-    mock_input = mocker.patch("builtin.input",return_value = "pop")
+    mock_input = mocker.patch("builtins.input",return_value = "pop")
     with pytest.raises(ValueError):
         get_seven_letter_word()
     mock_input.assert_called_once()
     
 
 def test_parse_json_from_file(tmp_path):
-    content = {1:"spongebob"}
+    content = {'1':"spongebob"}
     test_data = json.dumps(content)
     file_path = tmp_path / "test.json"
     with open(file_path, "w") as f:
@@ -61,23 +61,23 @@ def test_fix_agreement():
     fix_agreement(sentence)
     assert " ".join(sentence) == "she quickly skips to school."
     
-    sentence = "the dog frantically chase the squirrel.".split()
+    sentence = "the purple dog frantically chase the squirrel.".split()
     fix_agreement(sentence)
-    assert " ".join(sentence) == "the dog frantically chases the squirrel."
+    assert " ".join(sentence) == "the purple dog frantically chases the squirrel."
     
-    sentence = "the dog frantically chase the squirrel, and Jane eats a apple as she quickly skip to school.".split()
+    sentence = "the purple dog frantically chase the squirrel, and Jane eats a apple as she quickly skip to school.".split()
     fix_agreement(sentence)
-    assert " ".join(sentence) == "the dog frantically chases the squirrel, and Jane eats an apple as she quickly skips to school."
+    assert " ".join(sentence) == "the purple dog frantically chases the squirrel, and Jane eats an apple as she quickly skips to school."
 
 def test_build_sentence(mocker):
-    data = {"adjective": ["purple","prickly","scenic"],
+    data = {"adjectives": ["purple","prickly","scenic"],
             "nouns": ["pineapple","chair","pizza"],
-            "verbs": ["running","eating","dashes"],
+            "verbs": ["run","eating","gallop"],
             "adverbs": ["quickly","sporadically","slowly"],
             "prepositions": ["under","over","though"]}
     seed = "BACCAAB"
     structure = ["ART","ADJ","NOUN","ADV","VERB","PREP","ART","ADJ","NOUN"]
-    mock_choice = mocker.patch("get_article",return_value="the")
-    assert build_sentence(seed,structure,data) == "the prickly pineapple slowly dashes under the purple chair"
+    mock_choice = mocker.patch("build_sentences.get_article",return_value="the")
+    assert build_sentence(seed,structure,data) == "The prickly pineapple slowly gallops under the purple chair"
     seed = "ABCABCA"
-    assert build_sentence(seed,structure,data) == "the purple chair slowly running over the scenic pineapple"
+    assert build_sentence(seed,structure,data) == "The purple chair slowly runs over the scenic pineapple"

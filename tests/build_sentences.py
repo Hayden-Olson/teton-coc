@@ -64,7 +64,7 @@ def fix_agreement(sentence):
         # Rule 2: If the indefinite article 'a' is found, 
         # check the starting letter of the noun two words ahead and replace with 'an' if the word starts with a vowel       
         if word == "a":
-            first_letter = sentence[index + 2][0]
+            first_letter = sentence[index + 1][0]
             if first_letter in "aeiou":
                 sentence[index] = 'an'
         # Rule 3: 'The' at the beginning of the sentence needs a verb update 4 words later to add an 's'
